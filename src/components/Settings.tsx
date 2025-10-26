@@ -2,10 +2,8 @@ import { useState, useEffect } from 'react'
 import { ArrowLeft, Check } from 'lucide-react'
 
 interface SettingsData {
-	autoSummarize: boolean
 	summaryStyle: 'bullet' | 'paragraph' | 'detailed'
 	summaryLength: 'short' | 'medium' | 'long'
-	summaryLanguage: string
 }
 
 interface SettingsProps {
@@ -13,10 +11,8 @@ interface SettingsProps {
 }
 
 const DEFAULT_SETTINGS: SettingsData = {
-	autoSummarize: false,
 	summaryStyle: 'bullet',
-	summaryLength: 'medium',
-	summaryLanguage: 'en'
+	summaryLength: 'medium'
 }
 
 export default function Settings({ onBack }: SettingsProps) {
@@ -91,46 +87,6 @@ export default function Settings({ onBack }: SettingsProps) {
 
 			{/* Settings Content */}
 			<div className='px-6 py-5 space-y-6 max-h-[480px] overflow-y-auto'>
-				{/* Auto-summarize */}
-				<div className='space-y-3'>
-					<div className='flex items-center justify-between'>
-						<div className='flex-1'>
-							<label
-								htmlFor='auto-summarize'
-								className='text-sm font-medium text-[#202124] cursor-pointer'>
-								Auto-summarize videos
-							</label>
-							<p className='text-xs text-[#5f6368] mt-1'>
-								Automatically generate summary when you open a
-								video
-							</p>
-						</div>
-						<button
-							id='auto-summarize'
-							onClick={() =>
-								updateSetting(
-									'autoSummarize',
-									!settings.autoSummarize
-								)
-							}
-							className={`relative w-[52px] h-8 rounded-full transition-colors ${
-								settings.autoSummarize
-									? 'bg-[#1a73e8]'
-									: 'bg-[#dadce0]'
-							}`}>
-							<span
-								className={`absolute top-1 w-6 h-6 bg-white rounded-full shadow transition-transform ${
-									settings.autoSummarize
-										? 'translate-x-6'
-										: 'translate-x-1'
-								}`}
-							/>
-						</button>
-					</div>
-				</div>
-
-				<div className='border-t border-[#e8eaed]' />
-
 				{/* Summary Style */}
 				<div className='space-y-3'>
 					<label className='block text-sm font-medium text-[#202124]'>
@@ -213,34 +169,6 @@ export default function Settings({ onBack }: SettingsProps) {
 							</button>
 						))}
 					</div>
-				</div>
-
-				<div className='border-t border-[#e8eaed]' />
-
-				{/* Summary Language */}
-				<div className='space-y-3'>
-					<label
-						htmlFor='language'
-						className='block text-sm font-medium text-[#202124]'>
-						Summary language
-					</label>
-					<select
-						id='language'
-						value={settings.summaryLanguage}
-						onChange={(e) =>
-							updateSetting('summaryLanguage', e.target.value)
-						}
-						className='w-full px-3 py-2 border border-[#dadce0] rounded text-sm focus:outline-none focus:border-[#1a73e8] focus:ring-1 focus:ring-[#1a73e8] bg-white text-[#202124]'>
-						<option value='en'>English</option>
-						<option value='es'>Spanish</option>
-						<option value='fr'>French</option>
-						<option value='de'>German</option>
-						<option value='it'>Italian</option>
-						<option value='pt'>Portuguese</option>
-						<option value='ja'>Japanese</option>
-						<option value='ko'>Korean</option>
-						<option value='zh'>Chinese</option>
-					</select>
 				</div>
 			</div>
 

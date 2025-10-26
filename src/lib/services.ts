@@ -8,7 +8,7 @@ import {
 } from './chromeAI'
 
 /**
- * Fetch YouTube transcript using ScrapingBee API
+ * Fetch YouTube transcript using ScrapingDog API
  */
 export async function fetchTranscript(videoId: string): Promise<{
 	videoId: string
@@ -18,10 +18,10 @@ export async function fetchTranscript(videoId: string): Promise<{
 
 	try {
 		// Get API key
-		const { scrapingBeeKey: apiKey } = await browser.storage.local.get(
-			'scrapingBeeKey'
+		const { scrapingDogKey: apiKey } = await browser.storage.local.get(
+			'scrapingDogKey'
 		)
-		if (!apiKey) throw new Error('ScrapingBee API key not configured.')
+		if (!apiKey) throw new Error('ScrapingDog API key not configured.')
 
 		// Fetch transcript
 		const url = 'https://api.scrapingdog.com/youtube/transcripts/'
@@ -56,10 +56,12 @@ export async function fetchTranscript(videoId: string): Promise<{
 /**
  * Generate summary using Chrome AI (Gemini Nano) with Gemini API fallback
  */
-export async function fetchSummary(
-	videoId: string,
-	mode: string = 'brief'
-): Promise<any> {
+export async function fetchSummary(videoId: string): Promise<any> {
+  
+	const { settings } = await browser.storage.local.get('settings')
+	const style = settings?.summaryStyle || 'bullet'
+	const mode = settings?.summaryLength || 'medium'
+
 	console.log('📝 fetchSummary called for:', videoId, 'mode:', mode)
 
 	try {
@@ -88,7 +90,7 @@ export async function fetchSummary(
 				}
 
 				const summary = await summarizeWithChromeAI(transcript, {
-					type: 'key-points',
+					type: style === 'paragraph' ? 'tl;dr' : 'key-points',
 					format: 'markdown',
 					length: lengthMap[mode] || 'medium'
 				})
@@ -112,7 +114,7 @@ export async function fetchSummary(
 					try {
 						const summary = await summarizeWithPromptAPI(
 							transcript,
-							'bullet',
+							style,
 							mode
 						)
 						return {
@@ -133,7 +135,7 @@ export async function fetchSummary(
 
 		// Fallback: Use Gemini API (only if configured)
 		console.log('🔄 Falling back to Gemini API...')
-		return await summarizeWithGemini(videoId, transcript, (mode = 'brief'))
+		return await summarizeWithGemini(videoId, transcript, mode)
 	} catch (err: any) {
 		console.error('❌ Summary fetch failed:', err)
 		return {
@@ -186,7 +188,8 @@ export async function summarizeWithGemini(
 				0,
 				30000
 			)}\n\nReturn the summary in markdown in ${mode} format.
-      Remove any introductory or redundant phrases.`
+      Remove any introductory or redundant phrases that refer to the transcript or the video.
+      Keep it focused purely on the content.`
 		})
 
 		// @ts-ignore

@@ -1,17 +1,18 @@
 import { useState, useEffect } from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
+import { toast } from 'react-hot-toast'
 import {
 	ChevronDown,
 	ChevronUp,
-Copy,
+	Copy,
 	Download,
 	Loader2,
 	AlertCircle,
 	SettingsIcon
 } from 'lucide-react'
 import Settings from './Settings'
-
+import Logo from '@/assets/icon.png'
 
 type SidebarModalProps = {
 	videoId: string | null
@@ -96,8 +97,10 @@ export default function SidebarModal({ videoId }: SidebarModalProps) {
 			await navigator.clipboard.writeText(text)
 			setCopied(true)
 			setTimeout(() => setCopied(false), 2000)
+			toast.success('Copied!')
 		} catch (err) {
 			console.error('Copy failed:', err)
+			toast.error('Failed to copy!')
 		}
 	}
 
@@ -114,6 +117,7 @@ export default function SidebarModal({ videoId }: SidebarModalProps) {
 		a.download = `quickgist-${videoId || 'video'}-${activeView}.md`
 		a.click()
 		URL.revokeObjectURL(url)
+		toast.success('Download Started!')
 	}
 
 	const getSourceBadge = () => {
@@ -150,32 +154,8 @@ export default function SidebarModal({ videoId }: SidebarModalProps) {
 				onClick={() => setIsExpanded(!isExpanded)}
 				className='flex items-center justify-between px-4 py-3 cursor-pointer hover:bg-[#f8f9fa] transition-colors border-b border-[#e8eaed]'>
 				<div className='flex items-center gap-3'>
-					<div className='w-8 h-8 rounded-full bg-[#1a73e8] flex items-center justify-center'>
-						<svg
-							width='16'
-							height='16'
-							viewBox='0 0 24 24'
-							fill='none'>
-							<path d='M12 2L2 7L12 12L22 7L12 2Z' fill='white' />
-							<path
-								d='M2 17L12 22L22 17'
-								stroke='white'
-								strokeWidth='2'
-							/>
-							<path
-								d='M2 12L12 17L22 12'
-								stroke='white'
-								strokeWidth='2'
-							/>
-						</svg>
-					</div>
-					<div>
-						<h3 className='text-sm font-medium text-[#202124]'>
-							QuickGist
-						</h3>
-						<p className='text-[11px] text-[#5f6368]'>
-							AI-powered summaries
-						</p>
+					<div className='w-8 h-8 flex items-center justify-center'>
+						<img src={Logo} alt='QuickGist Logo' />
 					</div>
 				</div>
 				<button className='p-1.5 hover:bg-[#f1f3f4] rounded-full transition-colors'>
@@ -279,7 +259,7 @@ export default function SidebarModal({ videoId }: SidebarModalProps) {
 									</div>
 								)}
 								<div className='space-y-2.5'>
-									<div className='prose prose-sm max-w-none text-[#202124] dark:text-gray-200'>
+									<div className='prose prose-sm max-w-none !text-[#202124]'>
 										<ReactMarkdown
 											remarkPlugins={[remarkGfm]}>
 											{summary}

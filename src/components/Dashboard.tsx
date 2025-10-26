@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useApiKey } from '@/hooks/useApiKey'
 import { Settings, Key, CheckCircle2, AlertCircle, Info } from 'lucide-react'
+import Logo from '@/assets/icon.png'
 
 interface DashboardProps {
 	onOpenSettings?: () => void
@@ -8,43 +9,43 @@ interface DashboardProps {
 
 export default function Dashboard({ onOpenSettings }: DashboardProps) {
 	const {
-		scrapingBeeKey,
+		scrapingDogKey,
 		geminiApiKey,
-		setScrapingBeeKey,
+		setScrapingDogKey,
 		setGeminiApiKey,
-		clearScrapingBeeKey,
+		clearScrapingDogKey,
 		clearGeminiApiKey,
 		isLoading
 	} = useApiKey()
 
-	const [scrapingBeeInput, setScrapingBeeInput] = useState('')
+	const [scrapingDogInput, setScrapingDogInput] = useState('')
 	const [geminiInput, setGeminiInput] = useState('')
-	const [showScrapingBeeInput, setShowScrapingBeeInput] = useState(false)
+	const [showScrapingDogInput, setShowScrapingDogInput] = useState(false)
 	const [showGeminiInput, setShowGeminiInput] = useState(false)
-	const [saving, setSaving] = useState<'scrapingbee' | 'gemini' | null>(null)
+	const [saving, setSaving] = useState<'scrapingDog' | 'gemini' | null>(null)
 	const [saveError, setSaveError] = useState<string | null>(null)
 
 	useEffect(() => {
-		if (!isLoading && !scrapingBeeKey) {
-			setShowScrapingBeeInput(true)
+		if (!isLoading && !scrapingDogKey) {
+			setShowScrapingDogInput(true)
 		}
-	}, [isLoading, scrapingBeeKey])
+	}, [isLoading, scrapingDogKey])
 
-	const handleSaveScrapingBee = async (e: React.FormEvent) => {
+	const handleSaveScrapingDog = async (e: React.FormEvent) => {
 		e.preventDefault()
 
-		if (!scrapingBeeInput.trim()) {
-			setSaveError('Please enter ScrapingBee API key')
+		if (!scrapingDogInput.trim()) {
+			setSaveError('Please enter ScrapingDog API key')
 			return
 		}
 
-		setSaving('scrapingbee')
+		setSaving('scrapingDog')
 		setSaveError(null)
 
 		try {
-			await setScrapingBeeKey(scrapingBeeInput)
-			setScrapingBeeInput('')
-			setShowScrapingBeeInput(false)
+			await setScrapingDogKey(scrapingDogInput)
+			setScrapingDogInput('')
+			setShowScrapingDogInput(false)
 		} catch (err) {
 			setSaveError(err instanceof Error ? err.message : 'Failed to save')
 		} finally {
@@ -91,31 +92,8 @@ export default function Dashboard({ onOpenSettings }: DashboardProps) {
 			<div className='px-6 py-5 border-b border-[#e8eaed]'>
 				<div className='flex items-center justify-between'>
 					<div className='flex items-center gap-3'>
-						<div className='w-10 h-10 rounded-full bg-[#1a73e8] flex items-center justify-center'>
-							<svg
-								width='20'
-								height='20'
-								viewBox='0 0 24 24'
-								fill='none'>
-								<path
-									d='M12 2L2 7L12 12L22 7L12 2Z'
-									fill='white'
-								/>
-								<path
-									d='M2 17L12 22L22 17'
-									stroke='white'
-									strokeWidth='2'
-									strokeLinecap='round'
-									strokeLinejoin='round'
-								/>
-								<path
-									d='M2 12L12 17L22 12'
-									stroke='white'
-									strokeWidth='2'
-									strokeLinecap='round'
-									strokeLinejoin='round'
-								/>
-							</svg>
+						<div className='w-10 h-10 flex items-center justify-center'>
+							<img src={Logo} alt='QuickGist Logo' />
 						</div>
 						<div>
 							<h1 className='text-[22px] font-normal text-[#202124]'>
@@ -139,14 +117,14 @@ export default function Dashboard({ onOpenSettings }: DashboardProps) {
 
 			{/* Content */}
 			<div className='px-6 py-5 space-y-4'>
-				{/* ScrapingBee API Key Section */}
-				{scrapingBeeKey && !showScrapingBeeInput ? (
+				{/* ScrapingDog API Key Section */}
+				{scrapingDogKey && !showScrapingDogInput ? (
 					<div className='space-y-3'>
 						<div className='flex items-start gap-3 p-4 bg-[#e8f5e9] rounded-lg'>
 							<CheckCircle2 className='w-5 h-5 text-[#137333] mt-0.5 flex-shrink-0' />
 							<div className='flex-1 min-w-0'>
 								<p className='text-sm font-medium text-[#137333]'>
-									ScrapingBee connected
+									ScrapingDog connected
 								</p>
 								<p className='text-xs text-[#137333] mt-1'>
 									Ready to fetch YouTube transcripts
@@ -158,16 +136,16 @@ export default function Dashboard({ onOpenSettings }: DashboardProps) {
 							<div className='flex items-center gap-2 min-w-0 flex-1'>
 								<Key className='w-4 h-4 text-[#5f6368] flex-shrink-0' />
 								<span className='text-sm text-[#5f6368] font-mono truncate'>
-									•••••{scrapingBeeKey.slice(-4)}
+									•••••{scrapingDogKey.slice(-4)}
 								</span>
 							</div>
 							<button
 								onClick={() => {
 									if (
-										confirm('Remove ScrapingBee API key?')
+										confirm('Remove ScrapingDog API key?')
 									) {
-										clearScrapingBeeKey()
-										setShowScrapingBeeInput(true)
+										clearScrapingDogKey()
+										setShowScrapingDogInput(true)
 									}
 								}}
 								className='text-xs text-[#1a73e8] hover:text-[#1557b0] font-medium ml-3'>
@@ -177,13 +155,13 @@ export default function Dashboard({ onOpenSettings }: DashboardProps) {
 					</div>
 				) : (
 					<form
-						onSubmit={handleSaveScrapingBee}
+						onSubmit={handleSaveScrapingDog}
 						className='space-y-3'>
 						<div className='flex items-start gap-3 p-4 bg-[#fef7e0] rounded-lg border border-[#f9ab00]'>
 							<AlertCircle className='w-5 h-5 text-[#e37400] mt-0.5 flex-shrink-0' />
 							<div className='flex-1'>
 								<p className='text-sm font-medium text-[#e37400]'>
-									ScrapingBee API key required
+									ScrapingDog API key required
 								</p>
 								<p className='text-xs text-[#7c4a00] mt-1'>
 									Required to fetch YouTube video transcripts
@@ -193,20 +171,20 @@ export default function Dashboard({ onOpenSettings }: DashboardProps) {
 
 						<div className='space-y-2'>
 							<label
-								htmlFor='scrapingbee-key'
+								htmlFor='scrapingDog-key'
 								className='block text-sm font-medium text-[#202124]'>
-								ScrapingBee API key
+								ScrapingDog API key
 							</label>
 							<input
-								id='scrapingbee-key'
+								id='scrapingDog-key'
 								type='password'
-								value={scrapingBeeInput}
+								value={scrapingDogInput}
 								onChange={(e) =>
-									setScrapingBeeInput(e.target.value)
+									setScrapingDogInput(e.target.value)
 								}
-								placeholder='Enter your ScrapingBee API key'
+								placeholder='Enter your ScrapingDog API key'
 								className='w-full px-3 py-2 border border-[#dadce0] rounded text-sm focus:outline-none focus:border-[#1a73e8] focus:ring-1 focus:ring-[#1a73e8] font-mono'
-								disabled={saving === 'scrapingbee'}
+								disabled={saving === 'scrapingDog'}
 								autoFocus
 							/>
 						</div>
@@ -214,11 +192,11 @@ export default function Dashboard({ onOpenSettings }: DashboardProps) {
 						<button
 							type='submit'
 							disabled={
-								saving === 'scrapingbee' ||
-								!scrapingBeeInput.trim()
+								saving === 'scrapingDog' ||
+								!scrapingDogInput.trim()
 							}
 							className='w-full py-2.5 bg-[#1a73e8] hover:bg-[#1557b0] text-white text-sm font-medium rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2'>
-							{saving === 'scrapingbee' ? (
+							{saving === 'scrapingDog' ? (
 								<>
 									<div className='w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin' />
 									<span>Saving...</span>
@@ -239,15 +217,15 @@ export default function Dashboard({ onOpenSettings }: DashboardProps) {
 								<li className='list-decimal'>
 									Visit{' '}
 									<a
-										href='https://www.scrapingbee.com/youtube-transcript-api/'
+										href='https://www.scrapingdog.com/youtube-transcript-extractor/'
 										target='_blank'
 										rel='noopener noreferrer'
 										className='text-[#1a73e8] hover:underline'>
-										ScrapingBee YouTube API
+										ScrapingDog YouTube API
 									</a>
 								</li>
 								<li className='list-decimal'>
-									Sign up for a free account (1,000 free
+									Sign up for a free account (2,000 free
 									credits)
 								</li>
 								<li className='list-decimal'>
@@ -260,12 +238,12 @@ export default function Dashboard({ onOpenSettings }: DashboardProps) {
 				)}
 
 				{/* Divider */}
-				{scrapingBeeKey && (
+				{scrapingDogKey && (
 					<div className='border-t border-[#e8eaed]' />
 				)}
 
 				{/* Gemini API Key Section (Optional) */}
-				{scrapingBeeKey && (
+				{scrapingDogKey && (
 					<div className='space-y-3'>
 						{geminiApiKey && !showGeminiInput ? (
 							<>
@@ -395,7 +373,7 @@ export default function Dashboard({ onOpenSettings }: DashboardProps) {
 				)}
 
 				{/* Info Card */}
-				{scrapingBeeKey && !showGeminiInput && (
+				{scrapingDogKey && !showGeminiInput && (
 					<div className='p-4 bg-[#f8f9fa] rounded-lg border border-[#e8eaed]'>
 						<p className='text-xs font-medium text-[#202124] mb-2'>
 							How to use

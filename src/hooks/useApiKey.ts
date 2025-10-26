@@ -1,23 +1,23 @@
 import { useState, useEffect } from 'react'
 
 interface ApiKeys {
-	scrapingBeeKey: string | null
+	scrapingDogKey: string | null
 	geminiApiKey: string | null
 }
 
 interface UseApiKeyReturn {
-	scrapingBeeKey: string | null
+	scrapingDogKey: string | null
 	geminiApiKey: string | null
-	setScrapingBeeKey: (key: string) => Promise<void>
+	setScrapingDogKey: (key: string) => Promise<void>
 	setGeminiApiKey: (key: string) => Promise<void>
-	clearScrapingBeeKey: () => Promise<void>
+	clearScrapingDogKey: () => Promise<void>
 	clearGeminiApiKey: () => Promise<void>
 	isLoading: boolean
 	error: string | null
 }
 
 export function useApiKey(): UseApiKeyReturn {
-	const [scrapingBeeKey, setScrapingBeeKeyState] = useState<string | null>(
+	const [scrapingDogKey, setScrapingDogKeyState] = useState<string | null>(
 		null
 	)
 	const [geminiApiKey, setGeminiApiKeyState] = useState<string | null>(null)
@@ -35,11 +35,11 @@ export function useApiKey(): UseApiKeyReturn {
 			setError(null)
 
 			const result = await browser.storage.local.get([
-				'scrapingBeeKey',
+				'scrapingDogKey',
 				'geminiApiKey'
 			])
 
-			setScrapingBeeKeyState(result.scrapingBeeKey || null)
+			setScrapingDogKeyState(result.scrapingDogKey || null)
 			setGeminiApiKeyState(result.geminiApiKey || null)
 
 			console.log('✅ API keys loaded')
@@ -53,25 +53,25 @@ export function useApiKey(): UseApiKeyReturn {
 		}
 	}
 
-	const setScrapingBeeKey = async (key: string) => {
+	const setScrapingDogKey = async (key: string) => {
 		try {
 			setError(null)
 
 			if (!key || key.trim().length < 10) {
-				throw new Error('Invalid ScrapingBee API key format')
+				throw new Error('Invalid ScrapingDog API key format')
 			}
 
 			const trimmedKey = key.trim()
-			await browser.storage.local.set({ scrapingBeeKey: trimmedKey })
-			setScrapingBeeKeyState(trimmedKey)
+			await browser.storage.local.set({ scrapingDogKey: trimmedKey })
+			setScrapingDogKeyState(trimmedKey)
 
-			console.log('✅ ScrapingBee API key saved')
+			console.log('✅ ScrapingDog API key saved')
 		} catch (err) {
-			console.error('❌ Failed to save ScrapingBee API key:', err)
+			console.error('❌ Failed to save ScrapingDog API key:', err)
 			setError(
 				err instanceof Error
 					? err.message
-					: 'Failed to save ScrapingBee API key'
+					: 'Failed to save ScrapingDog API key'
 			)
 			throw err
 		}
@@ -101,18 +101,18 @@ export function useApiKey(): UseApiKeyReturn {
 		}
 	}
 
-	const clearScrapingBeeKey = async () => {
+	const clearScrapingDogKey = async () => {
 		try {
 			setError(null)
-			await browser.storage.local.remove('scrapingBeeKey')
-			setScrapingBeeKeyState(null)
-			console.log('✅ ScrapingBee API key cleared')
+			await browser.storage.local.remove('scrapingDogKey')
+			setScrapingDogKeyState(null)
+			console.log('✅ ScrapingDog API key cleared')
 		} catch (err) {
-			console.error('❌ Failed to clear ScrapingBee API key:', err)
+			console.error('❌ Failed to clear ScrapingDog API key:', err)
 			setError(
 				err instanceof Error
 					? err.message
-					: 'Failed to clear ScrapingBee API key'
+					: 'Failed to clear ScrapingDog API key'
 			)
 			throw err
 		}
@@ -136,11 +136,11 @@ export function useApiKey(): UseApiKeyReturn {
 	}
 
 	return {
-		scrapingBeeKey,
+		scrapingDogKey,
 		geminiApiKey,
-		setScrapingBeeKey,
+		setScrapingDogKey,
 		setGeminiApiKey,
-		clearScrapingBeeKey,
+		clearScrapingDogKey,
 		clearGeminiApiKey,
 		isLoading,
 		error

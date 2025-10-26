@@ -16,27 +16,27 @@ export default defineContentScript({
 	runAt: 'document_end',
 
 	async main(ctx) {
-		console.log('yt-synthex: Content script starting...')
+		console.log('quickgist: Content script starting...')
 
 		// Listen for URL changes (YouTube is a SPA)
 		ctx.addEventListener(
 			window,
 			'wxt:locationchange',
 			async ({ newUrl }) => {
-				console.log('yt-synthex: Location changed to', newUrl)
+				console.log('quickgist: Location changed to', newUrl)
 
 				if (watchPattern.includes(newUrl)) {
 					const videoId = extractVideoId(newUrl.toString())
 
 					// Only remount if video ID changed
 					if (videoId && videoId !== currentVideoId) {
-						console.log('yt-synthex: New video detected:', videoId)
+						console.log('quickgist: New video detected:', videoId)
 						unmountCurrentUi()
 						mountUi(ctx, videoId)
 					}
 				} else {
 					// Not a watch page, unmount UI
-					console.log('yt-synthex: Left watch page, unmounting UI')
+					console.log('quickgist: Left watch page, unmounting UI')
 					unmountCurrentUi()
 				}
 			}
@@ -46,7 +46,7 @@ export default defineContentScript({
 		if (watchPattern.includes(location.href)) {
 			const videoId = extractVideoId(location.href)
 			if (videoId) {
-				console.log('yt-synthex: Initial mount for video:', videoId)
+				console.log('quickgist: Initial mount for video:', videoId)
 				mountUi(ctx, videoId)
 			}
 		}
@@ -56,11 +56,11 @@ export default defineContentScript({
 // Unmount and cleanup current UI
 function unmountCurrentUi() {
 	if (currentUi) {
-		console.log('yt-synthex: Unmounting previous UI')
+		console.log('quickgist: Unmounting previous UI')
 		try {
 			currentUi.remove()
 		} catch (e) {
-			console.warn('yt-synthex: Error unmounting UI:', e)
+			console.warn('quickgist: Error unmounting UI:', e)
 		}
 		currentUi = null
 		currentVideoId = null
@@ -78,15 +78,16 @@ async function mountUi(ctx: ContentScriptContext, videoId: string | null) {
 		)
 
 		const ui = await createShadowRootUi(ctx, {
-			name: 'yt-synthex-sidebar-modal',
+			name: 'quickgist-sidebar-modal',
 			position: 'inline',
 			anchor: sidebar,
 			append: 'first',
 			onMount: (container: HTMLElement) => {
-				console.log('yt-synthex: Mounting UI container')
+				console.log('quickgist: Mounting UI container')
 
 				const wrapper = document.createElement('div')
-				wrapper.id = 'yt-synthex-container'
+				wrapper.id = 'quickgist-container'
+        wrapper.style.marginBottom = '16px'
 				container.prepend(wrapper)
 
 				const root = ReactDOM.createRoot(wrapper)
@@ -97,9 +98,8 @@ async function mountUi(ctx: ContentScriptContext, videoId: string | null) {
 		})
 		ui.mount()
 		currentUi = ui
-		console.log('yt-synthex: UI mounted successfully for video:', videoId)
-
+		console.log('quickgist: UI mounted successfully for video:', videoId)
 	} catch (error) {
-		console.error('yt-synthex: Error mounting UI:', error)
+		console.error('quickgist: Error mounting UI:', error)
 	}
 }
