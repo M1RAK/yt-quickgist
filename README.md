@@ -144,99 +144,8 @@ pnpm build:firefox
 ### 4. Customize Settings
 - Click settings icon in popup
 - Configure:
-  - Auto-summarize on video load
   - Summary style (bullet/paragraph/detailed)
   - Summary length (short/medium/long)
-  - Summary language
-
-## 🧠 Chrome AI Integration
-
-### Checking AI Availability
-
-```typescript
-import { checkAIAvailability } from '@/lib/chromeAI'
-
-const isAvailable = await checkAIAvailability()
-// Returns: true if Chrome AI is ready, false otherwise
-```
-
-### Summarizing with Chrome AI
-
-```typescript
-import { summarizeWithChromeAI } from '@/lib/chromeAI'
-
-const summary = await summarizeWithChromeAI(transcript, {
-  type: 'key-points',
-  format: 'markdown',
-  length: 'medium'
-})
-```
-
-### Fallback Logic
-
-1. **Primary**: Chrome Summarizer API (Gemini Nano)
-2. **Secondary**: Chrome Prompt API
-3. **Tertiary**: Gemini API (requires API key)
-
-## 📦 Storage Schema
-
-```typescript
-// chrome.storage.local
-{
-  // API Key
-  geminiApiKey: string,
-
-  // User Settings
-  settings: {
-    autoSummarize: boolean,
-    summaryStyle: 'bullet' | 'paragraph' | 'detailed',
-    summaryLength: 'short' | 'medium' | 'long',
-    summaryLanguage: string
-  },
-
-  // Transcript Cache (24h TTL)
-  transcriptCache: {
-    [videoId]: {
-      data: { transcript, videoId },
-      timestamp: number
-    }
-  },
-
-  // Summary Cache (24h TTL)
-  summaryCache: {
-    [videoId:mode]: {
-      data: { summary, videoId, mode, source },
-      timestamp: number
-    }
-  }
-}
-```
-
-## 🎨 Design System
-
-### Colors
-
-```css
-/* Primary */
---blue-500: #3b82f6;
---blue-600: #2563eb;
-
-/* Neutral */
---gray-50: #f9fafb;
---gray-900: #111827;
-
-/* Status */
---green-500: #10b981;  /* Success */
---red-500: #ef4444;    /* Error */
---amber-500: #f59e0b;  /* Warning */
-```
-
-### Components
-
-- **Buttons**: Rounded-lg, 2.5rem height, medium font weight
-- **Cards**: Rounded-xl, border, shadow-sm
-- **Inputs**: Rounded-lg, focus:ring-2
-- **Typography**: System font stack, clear hierarchy
 
 ## 🔒 Privacy & Security
 
@@ -267,7 +176,7 @@ const summary = await summarizeWithChromeAI(transcript, {
 **Causes**:
 - Video has no captions
 - Video is private/age-restricted
-- tube-text.vercel.app is down
+- api.scrapingdog.com is down
 
 **Solution**: Try a different video with captions enabled
 
@@ -280,23 +189,6 @@ const summary = await summarizeWithChromeAI(transcript, {
 2. Ensure key starts with "AIza"
 3. Check for extra spaces when pasting
 4. Re-enter key in extension popup
-
-## 🏆 Chrome AI Challenge Compliance
-
-### Required Components
-- ✅ Uses Chrome's Built-in AI APIs (Summarizer API, Prompt API)
-- ✅ Practical use case (YouTube video summarization)
-- ✅ Public open-source repository
-- ✅ Demo video (TODO: record and upload)
-- ✅ Proper documentation
-
-### Submission Checklist
-- [x] Public GitHub repository
-- [x] README with setup instructions
-- [ ] Demo video (2-3 minutes)
-- [ ] Screenshots
-- [ ] Devpost submission
-- [x] License file (MIT)
 
 ## 📄 License
 
@@ -312,13 +204,13 @@ Contributions welcome! Please:
 ## 📧 Contact
 
 For questions or support:
-- GitHub Issues: [github.com/m1rak/ytquickgist/issues]
+- (GitHub Issues)[github.com/m1rak/ytquickgist/issues]
 - Email: abdullahiismail1105@gmail.com
 
 ## 🙏 Acknowledgments
 
 - Chrome AI Challenge Team
 - WXT Framework
-- tube-text.vercel.app for transcript service
+- api.scrapingdog.com for transcript service
 - Lucide Icons
 - Tailwind CSS
